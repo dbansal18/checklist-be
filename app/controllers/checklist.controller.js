@@ -47,6 +47,20 @@ exports.findAll = (req, res) => {
       });
 };
 
+exports.userChecklist = (req, res) => {
+
+  Checklist.find({userId: req.userId})
+    .then(data => {
+      res.send(data[0]);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving checklists."
+      });
+    });
+};
+
 // Find a single Checklist with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
@@ -72,9 +86,7 @@ exports.update = (req, res) => {
       });
     }
   
-    const id = req.params.id;
-  
-    Checklist.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+    Checklist.findOneAndUpdate({userId: req.userId}, {...req.body}, {useFindAndModify: false})
       .then(data => {
         if (!data) {
           res.status(404).send({
@@ -124,20 +136,6 @@ exports.deleteAll = (req, res) => {
         res.status(500).send({
           message:
             err.message || "Some error occurred while removing all checklists."
-        });
-      });
-};
-
-// Find all published Checklists
-exports.findAllPublished = (req, res) => {
-    Checklist.find({ published: true })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving checklists."
         });
       });
 };

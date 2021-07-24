@@ -1,8 +1,15 @@
 module.exports = mongoose => {
     var schema = mongoose.Schema(
       {
-        title: String,
-        description: String,
+        list: [{
+          title: String,
+        }],
+        deletedList: [{
+          title: String
+        }],
+        completedList: [{
+          title: String
+        }],
         userId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User"
